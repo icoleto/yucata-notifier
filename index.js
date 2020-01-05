@@ -8,9 +8,11 @@ async function main() {
   while (true) {
     const getCurrentGames = await yucata.analize();
     utils.parseCurrentGames(getCurrentGames).forEach(async game => {
-      if (utils.checkIfHasToBeNotified(game))
-      console.log(`${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} -> https://yucata.de/en/Game/MachiKoro/${game.id})`)
-      await notifier.send(`${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} -> https://yucata.de/en/Game/MachiKoro/${game.id})`)
+      if (utils.checkIfHasToBeNotified(game)) {
+        const msg = `${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} -> Last move on: ${game.lastMoveOn}`;
+        console.log(msg)
+        await notifier.send(msg)
+      }
     })
 
     await delay(10000);

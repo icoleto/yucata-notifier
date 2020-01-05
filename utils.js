@@ -14,10 +14,11 @@ module.exports = {
 
     if (!memHistory[game.id]) {
       memHistory[game.id] = game;
-      return false;
+      return game.getPlayerOnTurnNickname() === process.env.USER
     }
 
-    if (memHistory[game.id].lastMoveOn !== game.lastMoveOn && memHistory[game.id].getPlayerOnTurnNickname() === process.env.USER) {
+    if (memHistory[game.id].lastMoveOn !== game.lastMoveOn && game.getPlayerOnTurnNickname() === process.env.USER) {
+      memHistory[game.id] = game;
       return true;
     }
     return false;
