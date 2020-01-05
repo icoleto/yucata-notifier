@@ -1,4 +1,4 @@
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const utils = require('./utils');
 const yucata = require('./yucata-analizer')
 const TelegramNotifier = require('./telegram-notifier').TelegramNotifier
