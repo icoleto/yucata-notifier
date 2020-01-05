@@ -1,3 +1,5 @@
+const memHistory = {} // this is the laziest and dangerous way of persistence :(
+
 module.exports = {
   parseCurrentGames: function (getCurrentGamesResponse) {
     const games = [];
@@ -7,6 +9,19 @@ module.exports = {
     });
 
     return games;
+  },
+  checkIfHasToBeNotified: function (game) {
+
+    if (!memHistory[game.id]) {
+      memHistory[game.id] = game;
+      return game.getPlayerOnTurnNickname() === process.env.USER
+    }
+
+    if (memHistory[game.id].lastMoveOn !== game.lastMoveOn && game.getPlayerOnTurnNickname() === process.env.USER) {
+      memHistory[game.id] = game;
+      return true;
+    }
+    return false;
   }
 }
 
@@ -30,3 +45,4 @@ class Game {
   }
 
 }
+

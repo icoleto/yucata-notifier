@@ -1,14 +1,18 @@
 require('dotenv').config()
 const utils = require('./utils');
 const yucata = require('./yucata-analizer')
-const DiscordNotifier = require('./discord-notifier').DiscordNotifier
+const TelegramNotifier = require('./telegram-notifier').TelegramNotifier
+require('./telegram-notifier')
 async function main() {
-  const notifier = new DiscordNotifier();
+  const notifier = new TelegramNotifier();
   while (true) {
     const getCurrentGames = await yucata.analize();
     utils.parseCurrentGames(getCurrentGames).forEach(async game => {
-      console.log(`${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} - (Last move on : ${game.lastMoveOn})`)
-      // await notifier.send(`${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} - (Last move on : ${game.lastMoveOn})`)
+      if (utils.checkIfHasToBeNotified(game)) {
+        const msg = `${game.id} ${game.gameName}. It's turn of: ${game.getPlayerOnTurnNickname()} -> Last move on: ${game.lastMoveOn}`;
+        console.log(msg)
+        await notifier.send(msg)
+      }
     })
 
     await delay(10000);
